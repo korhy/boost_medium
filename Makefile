@@ -5,53 +5,67 @@ metadata_only=False
 model_is_tree=False
 
 help:
-	@echo "------ 👌 Commandes disponibles :"
-	@echo "> make help        - Afficher cette aide"
-	@echo "> make requirements - Installer les dépendances"
-	@echo "> make clean       - Nettoyer les fichiers temporaires"
-	@echo "> make clean_data  - Nettoyer les données préprocessées (force reprocessing)"
-	@echo "> make reinstall_package  - Réinstaller package"
-	@echo "> make train model_name=        - Entraîner le modèle (avec preprocessing intégré)"
-	@echo "> make evaluate model_name=    - Evaluer le modèle"
-	@echo "> make run_all model_name=      - run in the order : train -> evaluate"
+	@echo "------ 👌 Available commands:"
+	@echo "> make help        - Show this help"
+	@echo "> make requirements - Install dependencies"
+	@echo "> make clean       - Clean temporary files"
+	@echo "> make clean_data  - Clean preprocessed data (force reprocessing)"
+	@echo "> make reinstall_package  - Reinstall package"
+	@echo "> make train model_name=        - Train the model (with integrated preprocessing)"
+	@echo "> make evaluate model_name=    - Evaluate the model"
+	@echo "> make run_all model_name=      - run in the order: train -> evaluate"
 	@echo " ! Model names: LGBMRegressor, XGBRegressor, GradientBoostingRegressor, Ridge,"
 	@echo "   ExtraTreesRegressor, RandomForestRegressor, LinearRegression, ElasticNet"
 	@echo ""
 	@echo "------ ⚠️  IMPORTANT: Preprocessing is now integrated with training to prevent data leakage"
-	@echo "------ ✅ Fin des Commandes."
+	@echo "------ ✅ End of commands."
 
 requirements:
-	@echo "------ 🔄 Installation des dépendances..."
+	@echo "------ 🔄 Depencies Installation ..."
 	pip install -r requirements.txt
 	python -m nltk.downloader all
+	@mkdir -p raw_data
+	@mkdir -p raw_data/medium
+	@mkdir -p raw_data/medium/data/machine_learning
+	@mkdir -p raw_data/medium/data/deep_learning
+	@mkdir -p raw_data/medium/params/machine_learning
+	@mkdir -p raw_data/medium/params/deep_learning
+	@mkdir -p raw_data/medium/models/machine_learning
+	@mkdir -p raw_data/medium/models/deep_learning
+	@mkdir -p raw_data/medium/preprocessor/machine_learning
+	@mkdir -p raw_data/medium/preprocessor/deep_learning
+	@mkdir -p raw_data/medium/metrics/machine_learning
+	@mkdir -p raw_data/medium/metrics/deep_learning
+	@mkdir -p raw_data/medium/prediction/machine_learning
+	@mkdir -p raw_data/medium/prediction/deep_learning
 	@echo "------ ✅ Dépendances installées."
 
 reinstall_package:
-	@echo "------ 🔄 Réinstallation du package..."
+	@echo "------ 🔄 Reinstalling the package..."
 	@pip install --config-settings editable_mode=compat -e .
-	@echo "------ ✅ Package réinstallé."
+	@echo "------ ✅ Package reinstalled."
 
 clean:
-	@echo "------ 🧹 Nettoyage des fichiers temporaires..."
+	@echo "------ 🧹 Cleaning temporary files..."
 	@rm -fr **/__pycache__ **/*.pyc
 	@rm -fr **/build **/dist
 	@rm -fr medium.egg-info
 	@rm -f **/*Zone.Identifier
-	@echo "------ ✅ Nettoyage terminé."
+	@echo "------ ✅ Cleaning done."
 
 clean_data:
-	@echo "------ 🧹 Nettoyage des données préprocessées..."
+	@echo "------ 🧹 Cleaning preprocessed data..."
 	@rm -f ~/medium/data/df_*processed*.csv
-	@echo "------ ✅ Données préprocessées supprimées."
+	@echo "------ ✅ Preprocessed data deleted."
 
 clean_models:
-	@echo "------ 🧹 Nettoyage des modèles et preprocesseurs..."
-	@echo "⚠️  ATTENTION: Cette commande va supprimer tous les modèles!"
-	@echo "Appuyez sur Ctrl+C pour annuler, ou attendez 5 secondes..."
+	@echo "------ 🧹 Cleaning models and preprocessors..."
+	@echo "⚠️  WARNING: This command will delete all models!"
+	@echo "Press Ctrl+C to cancel, or wait 5 seconds..."
 	@sleep 5
 	@rm -f ~/medium/models/*.pickle
 	@rm -f ~/medium/preprocessor/*.pickle
-	@echo "------ ✅ Modèles et preprocesseurs supprimés."
+	@echo "------ ✅ Models and preprocessors deleted."
 
 test:
 	@echo "------ 🔄 Start test ..."
@@ -66,12 +80,12 @@ lint:
 # DEPRECATED: Preprocessing is now integrated with training to prevent data leakage
 # Use 'make train' instead which handles both preprocessing and training
 preprocess_deprecated:
-	@echo "------ ❌ DEPRECATED: Preprocessing séparé peut causer des fuites de données!"
-	@echo "------ ℹ️  Utilisez 'make train' qui gère le preprocessing correctement."
-	@echo "------ ℹ️  Le preprocessing est maintenant intégré dans l'entraînement."
+	@echo "------ ❌ DEPRECATED: Separate preprocessing may cause data leakage!"
+	@echo "------ ℹ️  Use 'make train' which handles preprocessing correctly."
+	@echo "------ ℹ️  Preprocessing is now integrated with training."
 
 train:
-	@echo "------ 🔄 Start train (avec preprocessing intégré)..."
+	@echo "------ 🔄 Start train (with integrated preprocessing)..."
 	@echo "ℹ️  Configuration:"
 	@echo "  - Model: $(model_name)"
 	@echo "  - Remove punctuation: $(remove_punct)"
@@ -99,13 +113,13 @@ run_all:
 
 # Validation commands
 validate_setup:
-	@echo "------ 🔍 Validation de la configuration..."
-	@echo "Vérification des preprocesseurs train-only:"
-	@ls -la ~/medium/preprocessor/*train_only* 2>/dev/null || echo "Aucun preprocesseur train-only trouvé"
+	@echo "------ 🔍 Validating configuration..."
+	@echo "Checking train-only preprocessors:"
+	@ls -la ~/medium/preprocessor/*train_only* 2>/dev/null || echo "No train-only preprocessor found"
 	@echo ""
-	@echo "Vérification des données préprocessées:"
-	@ls -la ~/medium/data/df_*processed*.csv 2>/dev/null || echo "Aucune donnée préprocessée trouvée"
-	@echo "------ ✅ Validation terminée."
+	@echo "Checking preprocessed data:"
+	@ls -la ~/medium/data/df_*processed*.csv 2>/dev/null || echo "No preprocessed data found"
+	@echo "------ ✅ Validation done."
 
 # Service API
 as_service:
@@ -113,17 +127,18 @@ as_service:
 
 # Development helpers
 watch_metrics:
-	@echo "------ 📊 Surveillance des métriques..."
+	@echo "------ 📊 Watching metrics..."
 	@watch -n 2 'ls -lht ~/medium/metrics/ | head -10'
 
 compare_models:
-	@echo "------ 📈 Comparaison des modèles..."
+	@echo "------ 📈 Comparing models..."
 	@python -c "import pandas as pd; import glob; files = glob.glob('~/medium/metrics/*.csv'); [print(f'{f}: MAE = {pd.read_csv(f)[\"mae\"].mean():.4f}') for f in files[-5:]]"
 
 # Full pipeline with best model
 production_ready:
-	@echo "------ 🚀 Préparation pour la production..."
+	@echo "------ 🚀 Preparing for production..."
 	@make clean
 	@make train model_name=XGBRegressor
 	@make evaluate model_name=XGBRegressor
-	@echo "------ ✅ Modèle prêt pour la production!"
+	@echo "------ ✅ Model ready for production!"
+
