@@ -1,100 +1,105 @@
-# 📊 Projet de Prédiction des Recommandations d'Articles Medium
+# 📊 Medium Article Recommendation Prediction Project
+## 📑 Project Overview
 
-## 📋 Description du Projet :
-	Ce projet vise à prédire le nombre de recommandations que recevront les articles publiés sur Medium.
-	Précisemment prédire la variable cible log1p_recommends (logarithme du nombre de recommandations + 1) à partir des caractéristiques des articles.
+This project aims to predict the number of recommendations that Medium articles will receive. Specifically, it predicts the target variable `log1p_recommends` (the logarithm of the number of recommendations + 1) based on article features.
 
-## 🎯 Objectifs :
-  Analyser les données des articles Medium
-  Développer un modèle de prédiction des recommandations
-  Atteindre la meilleure performance possible avec la métrique MAE (Mean Absolute Error)
+## 📋 Project Description
 
+The goal is to analyze Medium article data and develop a recommendation prediction model, optimizing for the best performance using the MAE (Mean Absolute Error) metric.
 
-## ⚙️ Installation et Configuration
-###  Prérequis
-  Python 3.10.6+
+The project is based on an old Kaggle competition : [How good is your Medium article?](https://www.kaggle.com/competitions/how-good-is-your-medium-article/overview)
+
+All data used in this project comes from the dataset provided by Kaggle :
+ - The training set is comprised of 62313 articles published on Medium before July 1, 2017
+ - The test set contains 34645 articles published on Medium from July 1, 2017 till March 3, 2018
+
+## ⚙️ Installation and Setup
+
+### 📊 Data
+
+Download the dataset from [Kaggle](https://www.kaggle.com/competitions/how-good-is-your-medium-article/data)
+
+- Required files:
+    - `train.json`: Training data (62,313 articles)
+    - `test.json`: Test data (34,645 articles)
+    - `train_log1p_recommends.csv`: Target variable for training
+
+For the training, we have extract into files:
+- From train.json :
+    - 43619 lines to train our models
+    - 18694 (left over) lines for the evaluation
+
+```
+head -n 43619 train.json > X_train.json
+tail -n +43620 train.json > X_test.json
+```
+
+- Same for train_log1p_recommends.csv :
+    - 43619 lines to train our models
+    - 18694 (left over) lines from train.json for the evaluation
+
+```
+head -n 43619 train_log1p_recommends.csv > y_train.csv
+tail -n +43620 train_log1p_recommends.csv > y_test.csv
+```
+
+In result, we have 4 files X_train.json, X_test.json, y_train.csv and y_test.csv
+
+The test.json file will be used for the prediction App only
+
+- Data structure:
+    Each article contains:
+    - `_id`: Unique identifier
+    - `url`: Article URL
+    - `published`: Publication date
+    - `title`: Article title
+    - `author`: Author information
+    - `content`: Article HTML content
+    - `meta_tags`: Additional metadata
+
+### Prerequisites
+
+- Python 3.10.6+
 
 ### Installation
-- Cloner le repository:
-  git clone <repository-url>
-  cd BOOST_MEDIEM
 
-- Les commandes disponibles :
-  make help
-
-- Installer les dépendances :
-  make requirments
-
-- Copier le fichier d'exemple
-  cp .env.example .env
-
-- Éditer le fichier .env avec vos chemins :
-  nano .env    (ou utiliser votre éditeur favori)
-
-- Chemins des fichiers de données
-   - TRAIN_JSON=path/train.json
-   - TEST_JSON=path/test.json
-   - TARGET_CSV=path/train_log1p_recommends.csv
-
-- Créer les dossiers suivant
+- Clone the repository:
   ```bash
-  mkdir -p ~/medium/data/
-  mkdir -p ~/medium/data/deep_learning
-  mkdir -p ~/medium/params/
-  mkdir -p ~/medium/models/
-  mkdir -p ~/medium/models/deep_learning
-  mkdir -p ~/medium/preprocessor/
-  mkdir -p ~/medium/metrics/
-  mkdir -p ~/medium/prediction/
+  git clone git@github.com:korhy/boost_medium.git
+  cd boost_medium
   ```
 
+- Install dependencies:
+  ```
+  make requirments
+  ```
 
-### 🚀 Utilisation
+- Copy the example environment file:
+  ```
+  cp .env.example .env
+  ```
 
-Commandes principales:
-  - Installation et setup
-      make setup           : Configuration initiale
-			make requirments     : Installation des dépendances
+- Edit the `.env` file with your paths:
+  ```
+  nano .env    # or use your preferred editor
+  ```
 
-		- Développement
-			make reinstall_package : Réinstaller le package après modifications
-			make clean             : Nettoyer les fichiers temporaires
+- Complete with the path of the data files that we have create above:
+```
+DATA_TRAIN=path_to_your/X_train.json
+DATA_TEST=path_to_your/X_test.json
+DATA_LOG_RECOMMEND=path_to_your/y_train.csv
+DATA_TEST_LOG_RECOMMEND=path_to_your/y_test.csv
+```
+>[!TIP]
+>Put them in the raw_data folder at the root of the projet, this one is already gitignore 😉
 
-		- Charger les données
-			df = load_json_from_files(TRAIN_PATH, num_lines=1000)
-
-
-### 📊 Données
-- Fichiers requis
-    train.json : Données d'entraînement (62,313 articles)
-    test.json : Données de test (34,645 articles)
-    train_log1p_recommends.csv : Variable cible pour l'entraînement
-
-- Structure des données:
-    Chaque article contient :
-      _id : Identifiant unique
-      url : URL de l'article
-      published : Date de publication
-      title : Titre de l'article
-      author : Informations sur l'auteur
-      content : Contenu HTML de l'article
-      meta_tags : Métadonnées supplémentaires
-
-
-### 🤝 Contribution
-  - Forker le projet
-  - Créer une branche feature (git checkout -b mybranch)
-	- Add modifications (git add .)
-	- Committer les changes (git commit -m 'my modif')
-  - Pusher sur la branche (git push origin mybranch)
-  - Ouvrir une Pull Request
 
 ### 📝 License
- Ce projet est sous licence MIT.
 
-### 🙏 Remerciements
-  Team Medium
-  LeWagon
+This project is licensed under the MIT License.
 
-### 📞 Support
-	Pour toute question ou problème, veuillez ouvrir une issue sur le repository GitHub.
+### 🙏 Acknowledgements
+
+- Team Medium
+- LeWagon
