@@ -71,7 +71,7 @@ The test.json file will be used for the prediction App only
 
 - Install dependencies:
   ```
-  make requirments
+  make requirements
   ```
 
 - Copy the example environment file:
