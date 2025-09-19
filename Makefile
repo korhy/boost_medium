@@ -23,7 +23,9 @@ help:
 requirements:
 	@echo "------ 🔄 Depencies Installation ..."
 	pip install -r requirements.txt
-	python -m nltk.downloader all
+	python -m nltk.downloader punkt
+	python -m nltk.downloader punkt_tab
+	python -m nltk.downloader wordnet
 	@mkdir -p raw_data
 	@mkdir -p raw_data/medium
 	@mkdir -p raw_data/medium/data/machine_learning
@@ -141,4 +143,3 @@ production_ready:
 	@make train model_name=XGBRegressor
 	@make evaluate model_name=XGBRegressor
 	@echo "------ ✅ Model ready for production!"
-
