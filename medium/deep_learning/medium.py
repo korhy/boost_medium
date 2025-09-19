@@ -5,7 +5,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, Flatten, GlobalMaxPooling1D
-from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout
+from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout, Input
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
 class Medium:
@@ -140,15 +140,16 @@ class Medium:
         max_length = self.get_max_sequence_length()
 
         model = Sequential([
+            Input(shape=(max_length,)),
             Embedding(input_dim=vocab_size, output_dim=embedding_dim, input_length=max_length),
-            LSTM(64, return_sequences=True),
-            Dropout(0.2),
-            LSTM(32),
+            LSTM(128, return_sequences=True, dropout=0.2, recurrent_dropout=0.2),
+            LSTM(64, dropout=0.2, recurrent_dropout=0.2),
+            Dense(32, activation='relu'),
             Dropout(0.2),
             Dense(1, activation='linear')  # Linear activation for regression
         ])
 
-        model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae'])
+        model.compile(optimizer='adam', loss='mse', metrics=['mae'])
         model.name = "LSTM"
         self.model = model
         self.is_fitted = False
