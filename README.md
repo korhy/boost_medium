@@ -76,7 +76,7 @@ The test.json file will be used for the prediction App only
 
 - Copy the example environment file:
   ```
-  cp .env.example .env
+  cp .env.sample .env
   ```
 
 - Edit the `.env` file with your paths:
